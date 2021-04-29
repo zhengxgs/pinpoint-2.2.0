@@ -937,6 +937,9 @@
                 },{
                     "NAME": "FILE DESCRIPTOR COUNT",
                     "DESC": "Sends an alarm when the number of open file descriptors exceeds the configured threshold."
+                },{
+                    "NAME": "GC COUNT",
+                    "DESC": "Sends an alarm when the application's GC count exceeds the configured threshold."
                 }]
             }]
         }]

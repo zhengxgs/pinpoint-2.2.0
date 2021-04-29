@@ -26,18 +26,23 @@
                 [errorMessage]="i18nGuide['department']">
             </pp-form-field-error-message>
         </div>
+
         <div class="l-field-wrapper">
-            <label class="l-label" for="phoneNumber">{{i18nLabel.PHONE_LABEL}}</label>
+            <label class="l-label" for="phoneNumber">微信(找各组负责人添加)</label>
+            <!--
             <input type="text" class="l-input" id="phoneNumber" formControlName="phoneNumber"
                 (keyup)="onKeyup()"
                 (countrychange)="onCountryChange()"
                 #telInput>
+                -->
             <input type="hidden" formControlName="phoneCountryCode">
+            <input type="text" class="l-input" id="phoneNumber" formControlName="phoneNumber">
             <pp-form-field-error-message
                 [control]="pinpointUserForm.get('phoneNumber')"
                 [errorMessage]="i18nGuide['phoneNumber']">
             </pp-form-field-error-message>
         </div>
+
         <div class="l-field-wrapper">
             <label class="l-label" for="email">{{i18nLabel.EMAIL_LABEL}}</label>
             <input type="text" class="l-input" id="email" formControlName="email">

@@ -936,6 +936,9 @@
                 },{
                     "NAME": "FILE DESCRIPTOR COUNT",
                     "DESC": "열려있는 File Descriptor 개수가 임계치를 초가한 경우 알람이 전송된다."
+                },{
+                    "NAME": "GC COUNT",
+                    "DESC": "Sends an alarm when the application's GC count exceeds the configured threshold."
                 }]
             }]
         }]

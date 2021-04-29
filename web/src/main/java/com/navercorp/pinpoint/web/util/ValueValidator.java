@@ -58,6 +58,7 @@ public class ValueValidator {
 
     private static final int PHONENUMBER_MAX_LENGTH = 24;
     private static final int PHONENUMBER_MIN_LENGTH = 3;
+    private static final int PHONENUMBER_MIN_LENGTH_NEW = 1;
     private static final String PHONENUMBER_PATTERN_EXPRESSION = "[0-9]+";
     private static final Pattern PHONENUMBER_PATTERN = Pattern.compile(PHONENUMBER_PATTERN_EXPRESSION);
 
@@ -137,7 +138,7 @@ public class ValueValidator {
     }
 
     public static boolean validatePhonenumber(String phonenumber) {
-        if (validateLength(phonenumber, PHONENUMBER_MAX_LENGTH, PHONENUMBER_MIN_LENGTH) == false) {
+        if (validateLength(phonenumber, PHONENUMBER_MAX_LENGTH, PHONENUMBER_MIN_LENGTH_NEW) == false) {
             return false;
         }
 
