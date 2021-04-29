@@ -16,20 +16,20 @@
 
 package com.navercorp.pinpoint.web.controller;
 
+import com.navercorp.pinpoint.web.service.AdminService;
+import com.navercorp.pinpoint.web.service.AgentInfoService;
 import com.navercorp.pinpoint.web.vo.Application;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.navercorp.pinpoint.web.service.AdminService;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author netspider
@@ -45,6 +45,29 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private AgentInfoService agentInfoService;
+
+
+    /**
+     * 提供API供定时器调用.定时清理
+     * @Author zhengxgs
+     * @Date 2021/4/29 10:36
+     * @param
+     * @return String
+     **/
+    @RequestMapping(value = "/removeUnexpectedAgentInfo", method = RequestMethod.GET, params = {"!application"})
+    @ResponseBody
+    public String removeUnexpectedAgentInfo() {
+        try {
+            int delCount = this.agentInfoService.removeUnexpectedAgentInfo();
+            return "OK, del:" + delCount;
+        } catch (Exception e) {
+            logger.error("error removeUnexpectedAgentInfo", e);
+            return e.getMessage();
+        }
+    }
 
     @RequestMapping(value = "/removeApplicationName")
     @ResponseBody

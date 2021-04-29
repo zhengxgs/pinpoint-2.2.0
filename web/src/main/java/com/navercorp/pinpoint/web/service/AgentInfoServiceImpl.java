@@ -42,13 +42,6 @@ import com.navercorp.pinpoint.web.vo.timeline.inspector.AgentStatusTimeline;
 import com.navercorp.pinpoint.web.vo.timeline.inspector.AgentStatusTimelineBuilder;
 import com.navercorp.pinpoint.web.vo.timeline.inspector.AgentStatusTimelineSegment;
 import com.navercorp.pinpoint.web.vo.timeline.inspector.InspectorTimeline;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.PredicateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -58,6 +51,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.PredicateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 /**
  * @author netspider
@@ -81,6 +80,38 @@ public class AgentInfoServiceImpl implements AgentInfoService {
     private final AgentDownloadInfoDao agentDownloadInfoDao;
 
     private final JvmGcDao jvmGcDao;
+
+    @Override
+    public int removeUnexpectedAgentInfo() {
+        int delCount = 0;
+        long timestamp = System.currentTimeMillis();
+        // key = hostname
+        // value= list fo agentinfo
+        List<Application> applications = applicationIndexDao.selectAllApplicationNames();
+        for (Application application : applications) {
+
+            final List<String> agentIdList = this.applicationIndexDao.selectAgentIds(application.getName());
+            if (logger.isDebugEnabled()) {
+                logger.debug("agentIdList={}", agentIdList);
+            }
+
+            if (CollectionUtils.isEmpty(agentIdList)) {
+                logger.debug("agentIdList is empty. applicationName={}", application.getName());
+                return 0;
+            }
+
+            List<AgentInfo> agentInfos = this.agentInfoDao.getAgentInfos(agentIdList, timestamp);
+            this.agentLifeCycleDao.populateAgentStatuses(agentInfos, timestamp);
+            for (AgentInfo agentInfo : agentInfos) {
+                AgentStatus status = agentInfo.getStatus();
+                if (status.getState().equals(AgentLifeCycleState.UNEXPECTED_SHUTDOWN)) {
+                    delCount++;
+                    applicationIndexDao.deleteAgentId(agentInfo.getApplicationName(), agentInfo.getAgentId());
+                }
+            }
+        }
+        return delCount;
+    }
 
     public AgentInfoServiceImpl(AgentEventService agentEventService,
                                 AgentWarningStatService agentWarningStatService, ApplicationIndexDao applicationIndexDao,

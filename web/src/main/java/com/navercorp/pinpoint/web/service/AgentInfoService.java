@@ -24,7 +24,6 @@ import com.navercorp.pinpoint.web.vo.ApplicationAgentHostList;
 import com.navercorp.pinpoint.web.vo.ApplicationAgentsList;
 import com.navercorp.pinpoint.web.vo.Range;
 import com.navercorp.pinpoint.web.vo.timeline.inspector.InspectorTimeline;
-
 import java.util.Collection;
 import java.util.Set;
 
@@ -33,6 +32,17 @@ import java.util.Set;
  * @author HyunGil Jeong
  */
 public interface AgentInfoService {
+
+    /**
+     * zhengxgs
+     *
+     *
+     * @Author zhengxgs
+     * @Date 2021/4/29 10:34
+     * @param
+     * @return int
+     **/
+    int removeUnexpectedAgentInfo();
 
     ApplicationAgentsList getAllApplicationAgentsList(AgentInfoFilter filter, long timestamp);
 
