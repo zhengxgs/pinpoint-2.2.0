@@ -343,6 +343,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.71</version>
+        </dependency>
+
     </dependencies>
 
     <build>

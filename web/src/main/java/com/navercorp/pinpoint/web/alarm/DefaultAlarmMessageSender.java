@@ -16,35 +16,63 @@
 package com.navercorp.pinpoint.web.alarm;
 
 import com.navercorp.pinpoint.web.alarm.checker.AlarmChecker;
+import com.navercorp.pinpoint.web.alarm.utils.WxNotifyUtils;
+import com.navercorp.pinpoint.web.service.UserGroupService;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author minwoo.jung
  */
 public class DefaultAlarmMessageSender implements AlarmMessageSender {
 
-    private final MailSender mailSender;
+//    private final MailSender mailSender;
+//    private final SmsSender smsSender;
 
-    private final SmsSender smsSender;
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    public DefaultAlarmMessageSender(MailSender mailSender,
-                                     Optional<SmsSender> smsSender) {
+    private UserGroupService userGroupService;
+
+    /*
+    @Autowired
+    public DefaultAlarmMessageSender(MailSender mailSender, Optional<SmsSender> smsSender) {
         this.mailSender = Objects.requireNonNull(mailSender, "mailSender");
         this.smsSender = smsSender.orElseGet(EmptySmsSender::new);
     }
+    */
 
     @Override
     public void sendSms(AlarmChecker checker, int sequenceCount, StepExecution stepExecution) {
-        this.smsSender.sendSms(checker, sequenceCount, stepExecution);
+//        this.smsSender.sendSms(checker, sequenceCount, stepExecution);
+        List<String> receivers = userGroupService.selectPhoneNumberOfMember(checker.getUserGroupId());
+        if (receivers.size() == 0) {
+            return;
+        }
+        List<String> sms = checker.getSmsMessage();
+        for (String id : receivers) {
+            for (String message : sms) {
+                String applicationId = "";
+                try {
+                    applicationId = checker.getRule().getApplicationId();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                logger.error("send SMS : {} {}", applicationId, message);
+                // TODO Implement logic for sending SMS
+                try {
+                    WxNotifyUtils.sendMsg(id, applicationId + " " + message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
     public void sendEmail(AlarmChecker checker, int sequenceCount, StepExecution stepExecution) {
-        this.mailSender.sendEmail(checker, sequenceCount, stepExecution);
+        // this.mailSender.sendEmail(checker, sequenceCount, stepExecution);
     }
 }

@@ -146,6 +146,9 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Transactional(readOnly = true)
     public List<String> selectPhoneNumberOfMember(String userGroupId) {
         final List<String> phoneNumberList = userGroupDao.selectPhoneNumberOfMember(userGroupId);
+        return phoneNumberList;
+        // zhengxgs
+        /*
         List<String> decodedPhoneNumberList = phoneNumberList;
 
         if (!DefaultUserInfoDecoder.EMPTY_USER_INFO_DECODER.equals(userInfoDecoder)) {
@@ -153,6 +156,7 @@ public class UserGroupServiceImpl implements UserGroupService {
         }
 
         return User.removeHyphenForPhoneNumberList(decodedPhoneNumberList);
+        */
     }
 
     @Override
