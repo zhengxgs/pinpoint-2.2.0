@@ -5,4 +5,4 @@ spring:
     active: release
 
 server:
-  port: 8081
+  port: 18080
