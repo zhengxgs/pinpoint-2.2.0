@@ -125,8 +125,8 @@ public class MapServiceImpl implements MapService {
             map = builder.build(sourceApplication, buildTimeoutMillis);
         }
         watch.stop();
-        if (logger.isInfoEnabled()) {
-            logger.info("ApplicationMap BuildTime: {}", watch.prettyPrint());
+        if (logger.isDebugEnabled()) {
+            logger.debug("ApplicationMap BuildTime: {}", watch.prettyPrint());
         }
         if (serverMapDataFilter != null) {
             map = serverMapDataFilter.dataFiltering(map);

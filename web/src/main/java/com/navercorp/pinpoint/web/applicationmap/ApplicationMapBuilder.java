@@ -122,7 +122,7 @@ public class ApplicationMapBuilder {
     public ApplicationMap build(LinkDataDuplexMap linkDataDuplexMap, long timeoutMillis) {
         Objects.requireNonNull(linkDataDuplexMap, "linkDataDuplexMap");
 
-        logger.info("Building application map");
+        logger.debug("Building application map");
 
         NodeType nodeType = this.nodeType;
         if (nodeType == null) {
